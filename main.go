@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	"fmt"
 	"log"
 )
 
@@ -51,8 +52,19 @@ func main() {
 			}},
 	}
 
+	results := map[string]int{}
 	for i := 0; i < 15; i++ {
 		bytes, _ := s.MarshalJSON()
-		log.Printf("%X %v", md5.Sum(bytes), string(bytes))
+		hash := fmt.Sprintf("%X", md5.Sum(bytes))
+		log.Printf("%v %v", hash, string(bytes))
+		if count, ok := results[hash]; ok {
+			results[hash] = count + 1
+		} else {
+			results[hash] = 1
+		}
+	}
+	log.Println("results: ")
+	for hash, count := range results {
+		log.Printf("%v: %v", hash, count)
 	}
 }
