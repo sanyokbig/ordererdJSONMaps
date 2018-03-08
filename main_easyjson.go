@@ -39,25 +39,7 @@ func easyjson89aae3efDecodeJson(in *jlexer.Lexer, out *S) {
 		case "I":
 			out.I = int(in.Int())
 		case "StringToFilter":
-			if in.IsNull() {
-				in.Skip()
-			} else {
-				in.Delim('{')
-				if !in.IsDelim('}') {
-					out.StringToFilter = make(OrderedMapStringToFilter)
-				} else {
-					out.StringToFilter = nil
-				}
-				for !in.IsDelim('}') {
-					key := string(in.String())
-					in.WantColon()
-					var v1 Filter
-					(v1).UnmarshalEasyJSON(in)
-					(out.StringToFilter)[key] = v1
-					in.WantComma()
-				}
-				in.Delim('}')
-			}
+			(out.StringToFilter).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
 		}
@@ -90,23 +72,7 @@ func easyjson89aae3efEncodeJson(out *jwriter.Writer, in S) {
 		} else {
 			out.RawString(prefix)
 		}
-		if in.StringToFilter == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
-			out.RawString(`null`)
-		} else {
-			out.RawByte('{')
-			v2First := true
-			for v2Name, v2Value := range in.StringToFilter {
-				if v2First {
-					v2First = false
-				} else {
-					out.RawByte(',')
-				}
-				out.String(string(v2Name))
-				out.RawByte(':')
-				(v2Value).MarshalEasyJSON(out)
-			}
-			out.RawByte('}')
-		}
+		(in.StringToFilter).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
 }
@@ -158,25 +124,7 @@ func easyjson89aae3efDecodeJson1(in *jlexer.Lexer, out *Filter) {
 		case "Value":
 			out.Value = int(in.Int())
 		case "StringToInt":
-			if in.IsNull() {
-				in.Skip()
-			} else {
-				in.Delim('{')
-				if !in.IsDelim('}') {
-					out.StringToInt = make(OrderedMapStringToInt)
-				} else {
-					out.StringToInt = nil
-				}
-				for !in.IsDelim('}') {
-					key := string(in.String())
-					in.WantColon()
-					var v3 int
-					v3 = int(in.Int())
-					(out.StringToInt)[key] = v3
-					in.WantComma()
-				}
-				in.Delim('}')
-			}
+			(out.StringToInt).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
 		}
@@ -219,23 +167,7 @@ func easyjson89aae3efEncodeJson1(out *jwriter.Writer, in Filter) {
 		} else {
 			out.RawString(prefix)
 		}
-		if in.StringToInt == nil && (out.Flags&jwriter.NilMapAsEmpty) == 0 {
-			out.RawString(`null`)
-		} else {
-			out.RawByte('{')
-			v4First := true
-			for v4Name, v4Value := range in.StringToInt {
-				if v4First {
-					v4First = false
-				} else {
-					out.RawByte(',')
-				}
-				out.String(string(v4Name))
-				out.RawByte(':')
-				out.Int(int(v4Value))
-			}
-			out.RawByte('}')
-		}
+		(in.StringToInt).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
 }
